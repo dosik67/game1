@@ -737,7 +737,7 @@ export default function App() {
     return (
       <motion.div 
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        className="bg-white p-8 rounded-[32px] shadow-xl border-2 border-[#ffd54f] max-w-3xl w-full"
+        className="bg-white p-8 rounded-[32px] shadow-xl border-2 border-[#ffd54f] max-w-4xl w-full"
       >
         <div className="flex items-center justify-between mb-12">
           <h2 className="text-3xl font-bold text-[#5a5a40] flex items-center gap-3">
@@ -785,16 +785,25 @@ export default function App() {
         </div>
 
         {/* Full Leaderboard List */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[40vh] overflow-y-auto pr-2">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto pr-4 custom-scrollbar">
           {players.map((player, idx) => (
-            <div key={player.uid} className={`flex items-center justify-between p-4 rounded-2xl border-2 ${player.uid === uid ? 'border-[#ffd54f] bg-[#fffde7]' : 'border-[#f0f0e0] bg-[#fafafa]'}`}>
-              <div className="flex items-center gap-4">
-                <span className="font-bold w-6 text-center text-[#8a8a60]">{idx + 1}</span>
-                <span className="font-bold text-[#4a4a4a] truncate max-w-[120px]">{player.name}</span>
+            <div key={player.uid} className={`flex items-center justify-between p-5 md:p-6 rounded-3xl border-2 shadow-sm transition-transform hover:scale-[1.01] ${player.uid === uid ? 'border-[#ffd54f] bg-[#fffde7]' : 'border-[#f0f0e0] bg-[#fafafa]'}`}>
+              <div className="flex items-center gap-6">
+                <div className={`w-12 h-12 flex items-center justify-center rounded-2xl font-bold text-xl ${idx < 3 ? 'bg-[#ffd54f] text-[#5a5a40]' : 'bg-[#e0e0e0] text-[#8a8a60]'}`}>
+                  {idx + 1}
+                </div>
+                <span className="font-bold text-xl text-[#4a4a4a] truncate max-w-[200px]">{player.name}</span>
               </div>
-              <div className="flex items-center gap-4 text-sm">
-                <span className="text-[#4db6ac] font-bold">{player.score} {t[lang].points}</span>
-                <span className="text-[#8a8a60]">{player.solved_count}/6 {t[lang].solved}</span>
+              <div className="flex items-center gap-8 text-lg">
+                <div className="flex flex-col items-end">
+                  <span className="text-[#4db6ac] font-bold text-2xl">{player.score}</span>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#8a8a60]">{t[lang].score}</span>
+                </div>
+                <div className="w-px h-10 bg-[#e0e0e0]"></div>
+                <div className="flex flex-col items-end w-24">
+                  <span className="text-[#5a5a40] font-bold text-xl">{player.solved_count}/6</span>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#8a8a60]">{t[lang].solved}</span>
+                </div>
               </div>
             </div>
           ))}
