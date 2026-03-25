@@ -733,7 +733,6 @@ export default function App() {
 
   const renderLeaderboard = () => {
     const top3 = players.slice(0, 3);
-    const rest = players.slice(3, 15);
 
     return (
       <motion.div 
@@ -785,17 +784,17 @@ export default function App() {
           )}
         </div>
 
-        {/* Rest of the Leaderboard */}
+        {/* Full Leaderboard List */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[40vh] overflow-y-auto pr-2">
-          {rest.map((player, idx) => (
+          {players.map((player, idx) => (
             <div key={player.uid} className={`flex items-center justify-between p-4 rounded-2xl border-2 ${player.uid === uid ? 'border-[#ffd54f] bg-[#fffde7]' : 'border-[#f0f0e0] bg-[#fafafa]'}`}>
               <div className="flex items-center gap-4">
-                <span className="font-bold w-6 text-center text-[#8a8a60]">{idx + 4}</span>
+                <span className="font-bold w-6 text-center text-[#8a8a60]">{idx + 1}</span>
                 <span className="font-bold text-[#4a4a4a] truncate max-w-[120px]">{player.name}</span>
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-[#4db6ac] font-bold">{player.score} {t[lang].points}</span>
-                <span className="text-[#8a8a60]">{player.solved_count} {t[lang].solved}</span>
+                <span className="text-[#8a8a60]">{player.solved_count}/6 {t[lang].solved}</span>
               </div>
             </div>
           ))}
