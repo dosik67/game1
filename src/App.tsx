@@ -204,7 +204,7 @@ export default function App() {
   
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [appUrl, setAppUrl] = useState("");
-  const [authError, setAuthError] = useState<string | null>(null);
+
 
   const currentPlayer = players.find(p => p.uid === uid);
 
@@ -231,7 +231,7 @@ export default function App() {
           const { data, error } = await supabase.auth.signInAnonymously();
           if (error) {
             console.error("Auth Error:", error);
-            setAuthError(`⚠️ Ошибка авторизации: ${error.message}`);
+
             setUid(`local-${Date.now()}`);
           } else if (data.user) {
             setUid(data.user.id);
@@ -240,7 +240,7 @@ export default function App() {
         }
       } catch (error: any) {
         console.error("Auth Error:", error);
-        setAuthError(`⚠️ Ошибка авторизации: ${error.message}`);
+
         setUid(`local-${Date.now()}`);
         setIsAuthReady(true);
       }
@@ -468,11 +468,7 @@ export default function App() {
       <h1 className="text-4xl font-bold text-[#5a5a40] mb-2 serif">{t[lang].title}</h1>
       <p className="text-[#8a8a60] italic mb-8">{t[lang].subtitle}</p>
       
-      {authError && (
-        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm text-left border border-red-200">
-          {authError}
-        </div>
-      )}
+
 
       {isAdmin ? (
         <div className="mb-8">
