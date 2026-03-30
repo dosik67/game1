@@ -53,14 +53,19 @@ export default function MainMenu() {
             <div className={`p-4 rounded-xl ${game.bg} group-hover:scale-110 transition-transform`}>
               {game.icon}
             </div>
-            <div className="flex-1">
+            <div className="flex-1 border-l-2 border-slate-100 pl-4 sm:pl-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
-                <h2 className="text-xl font-bold text-[#4a4a4a]">{game.title}</h2>
+                <div className="flex items-center gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-slate-100 text-[#5a5a40] font-black rounded-lg text-md shadow-sm border border-slate-200 uppercase text-[10px] tracking-widest">
+                    Шаг {index + 1}
+                  </span>
+                  <h2 className="text-xl font-bold text-[#4a4a4a]">{game.title}</h2>
+                </div>
                 <span className="text-xs font-bold uppercase tracking-wider text-[#8a8a60] bg-[#f0f0e0] px-2 py-1 rounded-md self-start sm:self-auto text-center whitespace-nowrap">
                   {game.topic}
                 </span>
               </div>
-              <p className="text-sm text-[#8a8a60] leading-relaxed pr-2">{game.desc}</p>
+              <p className="text-sm text-[#8a8a60] leading-relaxed mt-1 pr-2">{game.desc}</p>
             </div>
             <div className="text-[#d4d4a0] group-hover:text-[#5a5a40] transition-colors pr-2 hidden sm:block">
               <ChevronRight size={24} />
