@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Flower2, Bug, Sun, Sprout, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Flower2, Bug, Sun, Sprout, CheckCircle2, ArrowRight } from 'lucide-react';
 
 // Helper component to display fractions nicely
 const Fraction = ({ n, d }: { n: number; d: number }) => (
@@ -61,10 +61,7 @@ export default function App() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <a href="/" className="flex items-center justify-center bg-white border border-emerald-100 p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 transition-colors shadow-sm">
-              <ArrowLeft size={24} />
-            </a>
+          <div className="flex items-center gap-3">
             <div className="bg-emerald-500 p-2 rounded-xl text-white">
               <Sprout size={28} />
             </div>

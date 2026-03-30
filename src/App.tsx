@@ -513,13 +513,6 @@ export default function App() {
           >
             {t[lang].teacherLogin}
           </button>
-          
-          <a
-            href="/fractions"
-            className="text-sm text-emerald-600 underline hover:text-emerald-800 font-medium mt-2"
-          >
-            Материалы (Математика Гүлзары)
-          </a>
         </div>
       )}
     </motion.div>
@@ -823,6 +816,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fdfcf0] flex flex-col items-center justify-center p-4 font-sans text-[#4a4a4a]">
+      {/* Back to Menu */}
+      <div className="absolute top-4 left-4 z-50">
+        <a href="/" className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-[#f0f0e0] text-[#8a8a60] hover:text-[#5a5a40] hover:bg-[#fafafa] font-bold transition-colors">
+          <ArrowLeft size={18} /> Меню
+        </a>
+      </div>
+
       {/* Language Switcher */}
       <div className="absolute top-4 right-4 flex bg-white rounded-full shadow-sm border border-[#f0f0e0] overflow-hidden z-50">
         <button
