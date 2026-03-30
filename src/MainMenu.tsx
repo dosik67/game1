@@ -56,8 +56,8 @@ export default function MainMenu() {
             <div className="flex-1 border-l-2 border-slate-100 pl-4 sm:pl-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-slate-100 text-[#5a5a40] font-black rounded-lg text-md shadow-sm border border-slate-200 uppercase text-[10px] tracking-widest">
-                    Шаг {index + 1}
+                  <span className="flex-shrink-0 px-2 h-8 flex items-center justify-center bg-slate-100 text-[#5a5a40] font-black rounded-lg text-md shadow-sm border border-slate-200 uppercase text-[10px] tracking-widest">
+                    Урок {index + 1}
                   </span>
                   <h2 className="text-xl font-bold text-[#4a4a4a]">{game.title}</h2>
                 </div>
