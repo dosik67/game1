@@ -506,12 +506,21 @@ export default function App() {
       )}
 
       {!isAdmin && (
-        <button
-          onClick={() => window.location.href = '?admin=true'}
-          className="mt-4 text-sm text-[#8a8a60] underline hover:text-[#5a5a40]"
-        >
-          {t[lang].teacherLogin}
-        </button>
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <button
+            onClick={() => window.location.href = '?admin=true'}
+            className="text-sm text-[#8a8a60] underline hover:text-[#5a5a40]"
+          >
+            {t[lang].teacherLogin}
+          </button>
+          
+          <a
+            href="/fractions"
+            className="text-sm text-emerald-600 underline hover:text-emerald-800 font-medium mt-2"
+          >
+            Материалы (Математика Гүлзары)
+          </a>
+        </div>
       )}
     </motion.div>
   );
