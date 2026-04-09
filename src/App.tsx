@@ -67,7 +67,9 @@ const t = {
     adminPanel: "Панель учителя",
     allReady: "Ждем других игроков...",
     cancelGame: "Отменить игру",
-    clearPlayers: "Очистить список"
+    clearPlayers: "Очистить список",
+    enterPassword: "Пароль учителя",
+    wrongPassword: "Неверный пароль"
   },
   kz: {
     title: "Математикалық Түймедақ",
@@ -98,7 +100,9 @@ const t = {
     adminPanel: "Мұғалім панелі",
     allReady: "Басқа ойыншыларды күтуде...",
     cancelGame: "Ойынды тоқтату",
-    clearPlayers: "Тізімді тазалау"
+    clearPlayers: "Тізімді тазалау",
+    enterPassword: "Мұғалім паролі",
+    wrongPassword: "Құпия сөз қате"
   }
 };
 
@@ -210,16 +214,15 @@ export default function App() {
   
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [appUrl, setAppUrl] = useState("");
+  
+  const [showTeacherLogin, setShowTeacherLogin] = useState(false);
+  const [teacherPassword, setTeacherPassword] = useState("");
 
 
   const currentPlayer = players.find(p => p.uid === uid);
 
   useEffect(() => {
     setAppUrl(window.location.origin);
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === 'true') {
-      setIsAdmin(true);
-    }
   }, []);
 
   // --- Auth & Supabase Setup ---
@@ -384,6 +387,21 @@ export default function App() {
     await supabase.from('players').update({ is_ready: !currentPlayer.is_ready }).eq('uid', uid);
   };
 
+  const handleTeacherLogin = () => {
+    const correctPassword = import.meta.env.VITE_TEACHER_PASSWORD || "1234";
+    if (teacherPassword === correctPassword) {
+      setIsAdmin(true);
+      setShowTeacherLogin(false);
+    } else {
+      alert(t[lang].wrongPassword);
+    }
+  };
+
+  const kickPlayer = async (uidToKick: string) => {
+    if (!isAdmin) return;
+    await supabase.from('players').delete().eq('uid', uidToKick);
+  };
+
   const startGame = async () => {
     if (!isAdmin) return;
     const endsAt = Date.now() + 180 * 1000; // 3 minutes
@@ -497,6 +515,30 @@ export default function App() {
             {t[lang].createRoom}
           </button>
         </div>
+      ) : showTeacherLogin ? (
+        <div className="mb-8">
+          <input
+            type="password"
+            value={teacherPassword}
+            onChange={(e) => setTeacherPassword(e.target.value)}
+            placeholder={t[lang].enterPassword}
+            className="w-full px-6 py-4 rounded-2xl border-2 border-[#d4d4a0] focus:outline-none focus:border-[#ffd54f] text-xl text-center mb-4"
+          />
+          <button
+            onClick={handleTeacherLogin}
+            disabled={!teacherPassword.trim()}
+            className="w-full bg-[#5a5a40] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#4a4a30] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mb-4"
+          >
+            <CheckCircle2 size={20} />
+            {t[lang].check}
+          </button>
+          <button
+            onClick={() => setShowTeacherLogin(false)}
+            className="text-sm text-[#8a8a60] underline hover:text-[#5a5a40]"
+          >
+            {t[lang].close}
+          </button>
+        </div>
       ) : (
         <div className="mb-8">
           <input
@@ -518,10 +560,10 @@ export default function App() {
         </div>
       )}
 
-      {!isAdmin && (
+      {!isAdmin && !showTeacherLogin && (
         <div className="mt-4 flex flex-col items-center gap-2">
           <button
-            onClick={() => window.location.href = '?admin=true'}
+            onClick={() => setShowTeacherLogin(true)}
             className="text-sm text-[#8a8a60] underline hover:text-[#5a5a40]"
           >
             {t[lang].teacherLogin}
@@ -554,7 +596,14 @@ export default function App() {
                 {players.map(p => (
                   <div key={p.uid} className={`flex items-center justify-between p-3 rounded-xl border-2 ${p.is_ready ? 'border-[#4db6ac] bg-[#e0f2f1]' : 'border-[#e0e0e0] bg-white'}`}>
                     <span className="font-bold text-[#4a4a4a] truncate pr-2">{p.name}</span>
-                    {p.is_ready ? <CheckCircle2 className="text-[#4db6ac]" size={20} /> : <Clock className="text-[#9e9e9e]" size={20} />}
+                    <div className="flex items-center gap-2">
+                      {p.is_ready ? <CheckCircle2 className="text-[#4db6ac]" size={20} /> : <Clock className="text-[#9e9e9e]" size={20} />}
+                      {isAdmin && (
+                        <button onClick={() => kickPlayer(p.uid)} className="text-red-400 hover:text-red-600 transition-colors">
+                          <XCircle size={20} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -573,13 +622,10 @@ export default function App() {
                 </div>
                 <button
                   onClick={startGame}
-                  disabled={players.length === 0 || readyCount !== players.length}
+                  disabled={players.length === 0}
                   className="w-full bg-[#ffd54f] text-[#5a5a40] py-4 rounded-2xl font-bold text-lg hover:bg-[#ffca28] transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center leading-tight"
                 >
                   <span>{t[lang].startGame}</span>
-                  {(players.length === 0 || readyCount !== players.length) && (
-                    <span className="text-sm text-[#8a8a60] mt-1 font-normal">{t[lang].allReady}</span>
-                  )}
                 </button>
                 <button
                   onClick={clearPlayers}
