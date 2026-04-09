@@ -66,7 +66,8 @@ const t = {
     emptyLeaderboard: "Пока нет результатов.",
     adminPanel: "Панель учителя",
     allReady: "Ждем других игроков...",
-    cancelGame: "Отменить игру"
+    cancelGame: "Отменить игру",
+    clearPlayers: "Очистить список"
   },
   kz: {
     title: "Математикалық Түймедақ",
@@ -96,7 +97,8 @@ const t = {
     emptyLeaderboard: "Әзірге нәтижелер жоқ.",
     adminPanel: "Мұғалім панелі",
     allReady: "Басқа ойыншыларды күтуде...",
-    cancelGame: "Ойынды тоқтату"
+    cancelGame: "Ойынды тоқтату",
+    clearPlayers: "Тізімді тазалау"
   }
 };
 
@@ -306,7 +308,7 @@ export default function App() {
         .from('players')
         .select('*')
         .order('score', { ascending: false })
-        .limit(15);
+        .limit(100);
       if (data) {
         setPlayers(data as Player[]);
       }
@@ -324,7 +326,7 @@ export default function App() {
             .from('players')
             .select('*')
             .order('score', { ascending: false })
-            .limit(15);
+            .limit(100);
           if (data) {
             setPlayers(data as Player[]);
           }
@@ -396,6 +398,13 @@ export default function App() {
     if (!isAdmin) return;
     await supabase.from('room').update({ status: 'lobby', ends_at: null }).eq('id', 'main');
     setLocalState('login');
+  };
+
+  const clearPlayers = async () => {
+    if (!isAdmin) return;
+    if (window.confirm("Точно удалить всех игроков из комнаты?")) {
+      await supabase.from('players').delete().neq('uid', '');
+    }
   };
 
   // Initialize problems when game starts
@@ -571,6 +580,13 @@ export default function App() {
                   {(players.length === 0 || readyCount !== players.length) && (
                     <span className="text-sm text-[#8a8a60] mt-1 font-normal">{t[lang].allReady}</span>
                   )}
+                </button>
+                <button
+                  onClick={clearPlayers}
+                  disabled={players.length === 0}
+                  className="w-full bg-[#ffebee] text-[#e53935] py-2 rounded-xl font-bold text-sm hover:bg-[#ffcdd2] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t[lang].clearPlayers}
                 </button>
               </>
             ) : (
