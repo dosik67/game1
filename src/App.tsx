@@ -64,7 +64,9 @@ const t = {
     points: "очков",
     loading: "Загрузка...",
     emptyLeaderboard: "Пока нет результатов.",
-    adminPanel: "Панель учителя"
+    adminPanel: "Панель учителя",
+    allReady: "Ждем других игроков...",
+    cancelGame: "Отменить игру"
   },
   kz: {
     title: "Математикалық Түймедақ",
@@ -92,7 +94,9 @@ const t = {
     points: "ұпай",
     loading: "Жүктелуде...",
     emptyLeaderboard: "Әзірге нәтижелер жоқ.",
-    adminPanel: "Мұғалім панелі"
+    adminPanel: "Мұғалім панелі",
+    allReady: "Басқа ойыншыларды күтуде...",
+    cancelGame: "Ойынды тоқтату"
   }
 };
 
@@ -200,7 +204,7 @@ export default function App() {
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   
   const [problemStartTime, setProblemStartTime] = useState<number>(0);
-  const [timeLeft, setTimeLeft] = useState<number>(120); // 2 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState<number>(180); // 3 minutes in seconds
   
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [appUrl, setAppUrl] = useState("");
@@ -380,7 +384,7 @@ export default function App() {
 
   const startGame = async () => {
     if (!isAdmin) return;
-    const endsAt = Date.now() + 120 * 1000; // 2 minutes
+    const endsAt = Date.now() + 180 * 1000; // 3 minutes
     
     // Reset all players scores
     await supabase.from('players').update({ score: 0, solved_count: 0, is_ready: false }).neq('uid', '');
@@ -560,9 +564,13 @@ export default function App() {
                 </div>
                 <button
                   onClick={startGame}
-                  className="w-full bg-[#ffd54f] text-[#5a5a40] py-4 rounded-2xl font-bold text-lg hover:bg-[#ffca28] transition-colors shadow-md"
+                  disabled={players.length === 0 || readyCount !== players.length}
+                  className="w-full bg-[#ffd54f] text-[#5a5a40] py-4 rounded-2xl font-bold text-lg hover:bg-[#ffca28] transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center leading-tight"
                 >
-                  {t[lang].startGame}
+                  <span>{t[lang].startGame}</span>
+                  {(players.length === 0 || readyCount !== players.length) && (
+                    <span className="text-sm text-[#8a8a60] mt-1 font-normal">{t[lang].allReady}</span>
+                  )}
                 </button>
               </>
             ) : (
@@ -600,7 +608,7 @@ export default function App() {
           <Crown className="mx-auto text-[#ffb300] mb-4" size={48} />
           <h2 className="text-3xl font-bold text-[#5a5a40] mb-6">{t[lang].timeRemaining}</h2>
           <div className="text-6xl font-mono font-bold text-[#4db6ac] mb-8">{formatTime(timeLeft)}</div>
-          <button onClick={resetRoom} className="text-[#8a8a60] underline hover:text-[#5a5a40]">{t[lang].resetGame}</button>
+          <button onClick={resetRoom} className="text-[#e53935] bg-[#ffebee] px-6 py-3 rounded-xl font-bold hover:bg-[#ffcdd2] transition-colors mt-4">{t[lang].cancelGame}</button>
         </div>
       );
     }
